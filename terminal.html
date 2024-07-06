@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/jquery"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery.terminal/js/jquery.terminal.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery.terminal/css/jquery.terminal.min.css"/>
+
+    <script src="https://cdn.jsdelivr.net/npm/progressbar.js"></script>
+</head>
+<body>
+    <template id="greetings">
+        _______  _______  ______    __   __  ___   __    _  _______  ___     
+       |       ||       ||    _ |  |  |_|  ||   | |  |  | ||   _   ||   |    
+       |_     _||    ___||   | ||  |       ||   | |   |_| ||  |_|  ||   |    
+         |   |  |   |___ |   |_||_ |       ||   | |       ||       ||   |    
+         |   |  |    ___||    __  ||       ||   | |  _    ||       ||   |___ 
+         |   |  |   |___ |   |  | || ||_|| ||   | | | |   ||   _   ||       |
+         |___|  |_______||___|  |_||_|   |_||___| |_|  |__||__| |__||_______|
+    </template>
+
+    <div id="container"></div>
+    <div id="progress-container" hidden></div>
+    <div id="terminal-container" hidden></div>
+    
+    <script>
+        // Login Settings
+        var logged_in = false;
+        var login_code = false;
+        var user_default = false;
+        var update_required = false;
+        var cloud_adminstrator = false;
+
+        // APT Dependencies
+        var progressBar;
+
+        // APT Packages
+        var nano = true
+
+        // APT Updates
+        var nano_updates = true
+        
+        // Login Creditals
+        var login_username = 'default';
+        var login_password = '00201';
+
+        // Requre Commands
+            // Unused: var ProgressBar = require('progressbar.js');
+
+
+        function DownloadPackage(url) {
+            if (url === 'NextLanguage') {
+                window.open('https://github.com/Nxium-Developments/NextLanguage/releases/download/v1.6/NextLanguage-v1.6.zip', '_blank');
+            } else if (url === 'nextlanguage') {
+                window.open('https://github.com/Nxium-Developments/NextLanguage/releases/download/v1.6/NextLanguage-v1.6.zip', '_blank');
+            } else if (url === 'nxl') {
+                window.open('https://github.com/Nxium-Developments/NextLanguage/releases/download/v1.6/NextLanguage-v1.6.zip', '_blank');
+            } else {
+                window.open(url);
+            }
+        };
+
+        function get_image(url) {
+            return new Promise(function(resolve, reject) {
+                const img = $('<img src="' + url + '"/>');
+                img.on('load', () => resolve(img));
+                img.on('error', reject);
+            });
+        };
+
+        function initProgressBar() {
+            progressBar = new ProgressBar.Line('#progress-container', {
+                strokeWidth: 4,
+                easing: 'easeInOut',
+                duration: 1400,
+                color: '#FFEA82',
+                trailColor: '#eee',
+                trailWidth: 1,
+                svgStyle: {width: '100%', height: '100%'},
+                from: {color: '#FFEA82'},
+                to: {color: '#ED6A5A'},
+            step: (state, bar) => {
+                bar.path.setAttribute('stroke', state.color);
+            }
+            });
+        }
+
+        /**
+        $(document).ready(function() {
+            initProgressBar();
+
+            $('#terminal-container').terminal({
+                start: function() {
+                    this.echo('Starting progress...');
+                    progressBar.animate(1.0, {
+                        duration: 5000
+                    }, function() {
+                        alert('Progress complete!');
+                    });
+                },
+                reset: function() {
+                    this.echo('Resetting progress...');
+                    progressBar.set(0);
+                },
+                set_progress: function(value) {
+                    if (value >= 0 && value <= 1) {
+                        this.echo('Setting progress to ' + (value * 100) + '%');
+                        progressBar.set(value);
+                    } else {
+                        this.error('Invalid progress value. Must be between 0 and 1.');
+                    }
+                },
+                help: function() {
+                    this.echo('Available commands:');
+                    this.echo('  start         - Start the progress bar');
+                    this.echo('  reset         - Reset the progress bar');
+                    this.echo('  set_progress  - Set the progress to a specific value (e.g., set_progress 0.5)');
+                    this.echo('  help          - Display this help message');
+                }
+                });
+
+        });
+        */
+
+        $('body').terminal({
+            contact: function(info) {
+                if (info === 'admin') {
+                        this.echo('Contacting adminstrator: ' + info);
+                        
+                    } else {
+                        this.error('Unable to contact adminstrator: ' + info);
+                    }
+            },
+
+            login: function(username, password) {
+                    if (username === 'admin' && password === 'root') {
+                        this.echo('You are now logged in as: ' + username);
+                        this.set_prompt('[' + username + '] nxoscloud_terminal ~$ ');
+
+                        logged_in = true;
+                    } else if (username === 'Nyx' && password === 'cloud18420$') {
+                        this.echo('You are now logged in as: ' + username);
+                        this.set_prompt('[' + username + '] nxoscloud_terminal ~$ ');
+
+                        logged_in = true;
+                    } else if (username === login_username && password === login_password) {
+                        this.echo('You are now logged in as: ' + username);
+                        this.set_prompt('[' + username + '] nxoscloud_terminal ~$ ');
+
+                        user_default = true;
+                    } else {
+                        this.error('Unable to login to the server terminal, using your information.');
+                    }
+            },
+
+            /**
+             * 
+            cat: function(width, height) {
+                const img = $('<img src="https://placekitten.com/' +
+                                width + '/' + height + '">', {raw: true});
+                img.on('load', this.resume);
+                this.pause();
+                this.echo(img);
+            },
+             *
+            dog: function(width, height) {
+                return get_image('https://placedog.net/' + width +
+                                    '/' + height);
+            }
+             *
+            title: function() {
+                return fetch('https://terminal.jcubic.pl')
+                    .then(r => r.text())
+                    .then(html => html.match(/<title>([^>]+)<\/title>/)[1]);
+            }
+             *
+            greetings: greetings.innerHTML
+            */
+
+            cat: function(width, height) {
+                return get_image('https://placekitten.com/' + width +
+                                    '/' + height);
+            },
+            
+            dog: function(width, height) {
+                return get_image('https://placedog.net/' + width +
+                                '/' + height);
+            },
+
+            title: function() {
+                return fetch('https://terminal.jcubic.pl')
+                    .then(r => r.text())
+                    .then(html => html.match(/<title>([^>]+)<\/title>/)[1]);
+            },
+            
+            apt: function(args, install) {
+                if (logged_in == true) {
+                    if (args === 'install') {
+                        if (install === '') {
+                            this.echo('Usage: apt install <package>');
+                        } else if (install) {
+                            this.echo('Installing package: ' + install);
+                            DownloadPackage(install); //download package from wnl
+                            
+                        } else if (install === 'nano') {
+                            if (nano === true) {
+                                this.echo('APT: nano is already installed.');
+                                
+                                if (nano_updates === true) {
+                                    this.echo('APT: Updating package: nano');
+                                    this.echo('APT: apt-package: update; is not implemented yet.');
+                                    this.echo('APT: Failed to install: nano');
+                                }
+                            } else if (nano === false) {
+                                this.echo('APT: Installing package: nano');
+
+                                progressBar.animate(1.0, {
+                                    duration: 5000
+                                }, function() {
+                                    alert('APT: Installed package: nano');
+                                    nano = true;
+                                });
+
+                                // var bar = new ProgressBar.Line('#container', {easing: 'easeInOut'});
+                                // bar.animate(1);
+                            } else {
+                                this.echo('APT: Failed to install: nano');
+                            }
+                        }
+                    } else {
+                        this.echo('APT unknown command: ' + args);
+                    }
+                } else {
+                    this.echo('You are not logged in. Use command: login <username> <password> to login.');
+                }
+            },
+
+            cloud: function(args) {
+                if (logged_in == true) {
+                    if (cloud_adminstrator == true) {
+                        if (args === 'update') {
+
+                            if (update_required == true) {
+
+                                this.echo('Updating Cloud Terminal...');
+                                window.location.href = 'http://nxoscloud.github.io/update/cloud.html';
+
+                            } else {
+
+                                this.echo('Cloud Terminal is up to date.');
+                            }   
+
+                        } else if (args === 'help') {
+
+                            this.echo('Available commands: update | help');
+
+                        } else {
+
+                            this.echo('Unknown Cloud Terminal command: ' + args);
+                        }
+
+                    } else if (args === 'help') {
+
+                        this.echo('Available commands: cloud request <login_code> | help');
+
+                    } else if (args === 'request') {
+
+                        this.set_prompt('Enter your login code: ');
+                        login_code = true;
+
+                        setInterval(function () {
+                            login_code = false;
+                        }, 10000);
+                        
+                    } else {
+
+                        this.echo('Unknown Cloud Terminal command: ' + args);
+
+                    }          
+                } else {
+
+                    this.echo('You are not logged in. Use command: login <username> <password> to login.');
+
+                }
+            },
+
+            hde: function(args) {
+                if (login_code == true) {
+                    if (args == '190') {
+                        cloud_adminstrator = true;
+                        login_code = false
+                        this.echo('Logged in as Cloud Administrator');
+                        this.set_prompt('[Cloud Administrator: ' + login_code + ']' + ' nxoscloud_terminal ~$ ');
+
+                        setInterval(function () {
+                            cloud_adminstrator = false;
+                            logged_in = false;
+                            this.echo('Logged out as Cloud Administrator');
+                            this.echo('Refreshed Terminal');
+                            this.clear();
+                            this.echo('Please login again (using command: login <username> <password>)');
+                            this.set_prompt('> ');
+                        }, 10000);
+                    } else {
+                        this.echo('Invalid login code');
+                    }
+                }
+                
+            },
+            
+            help: function() {
+                if (logged_in == true) {
+                    this.echo('Available commands: login <username> <password> | apt install <package> | logout | exit | clear | help');
+                } else {
+                    this.echo('Commands: contact <admin> | help | exit');
+                }
+            },
+
+            logout: function() {
+                if (logged_in == true) {
+                    logged_in = false;
+                    this.echo('Logged out');
+                    this.set_prompt('> ');
+                } else {
+                    this.echo('You are not logged in. Use command: login <username> <password> to login.');
+                }
+                
+            },
+
+            exit: function() {
+                this.echo('Goodbye!');
+                this.clear();
+                window.close();
+            },
+
+            clear: function() {
+                this.clear();
+            }
+        }, {
+            greetings: 'Login Terminal (using command: login <username> <password>)'
+        });     
+    </script>
+    <style>
+        #progress-container {
+            width: 80%;
+            margin: 20px auto;
+        }
+        #terminal-container {
+            height: 300px;
+            width: 80%;
+            margin: 20px auto;
+            border: 1px solid #ccc;
+        }
+    </style>
+</body>
+</html>
