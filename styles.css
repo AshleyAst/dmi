@@ -1,0 +1,62 @@
+body {
+        font-family: Arial, sans-serif;
+            margin: 20px;
+                padding: 0;
+                }
+
+                header, footer {
+                    text-align: center;
+                        margin-bottom: 20px;
+                        }
+
+                        form {
+                            max-width: 400px;
+                                margin: 0 auto;
+                                    padding: 10px;
+                                        background: #f0f0f0;
+                                            border-radius: 5px;
+                                                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+                                                }
+
+                                                form input {
+                                                    width: 100%;
+                                                        padding: 8px;
+                                                            margin-bottom: 10px;
+                                                                box-sizing: border-box;
+                                                                }
+
+                                                                #totalExpenses, #income {
+                                                                    margin: 20px auto;
+                                                                        max-width: 400px;
+                                                                            padding: 10px;
+                                                                                background: #f9f9f9;
+                                                                                    border: 1px solid #ccc;
+                                                                                        border-radius: 5px;
+                                                                                        }
+
+                                                                                        #expenseList {
+                                                                                            max-width: 600px;
+                                                                                                margin: 0 auto;
+                                                                                                }
+
+                                                                                                #expenseList ul {
+                                                                                                    list-style-type: none;
+                                                                                                        padding: 0;
+                                                                                                        }
+
+                                                                                                        #expenseList ul li {
+                                                                                                            border-bottom: 1px solid #ccc;
+                                                                                                                padding: 10px 0;
+                                                                                                                }
+
+                                                                                                                footer {
+                                                                                                                    text-align: center;
+                                                                                                                        position: fixed;
+                                                                                                                            bottom: 0;
+                                                                                                                                left: 0;
+                                                                                                                                    width: 100%;
+                                                                                                                                        background: #f0f0f0;
+                                                                                                                                            padding: 10px;
+                                                                                                                                                border-top: 1px solid #ccc;
+                                                                                                                                                }
+
